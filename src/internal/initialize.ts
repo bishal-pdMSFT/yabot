@@ -1,4 +1,4 @@
-import { HelloWorldCommandHandler } from "../helloworldCommandHandler";
+import { SparkleCommandHandler } from "../sparkleCommandHandler";
 import { BotBuilderCloudAdapter } from "@microsoft/teamsfx";
 import ConversationBot = BotBuilderCloudAdapter.ConversationBot;
 import config from "./config";
@@ -16,6 +16,6 @@ export const commandApp = new ConversationBot({
   },
   command: {
     enabled: true,
-    commands: [new HelloWorldCommandHandler()],
+    commands: [new SparkleCommandHandler()],
   },
 });

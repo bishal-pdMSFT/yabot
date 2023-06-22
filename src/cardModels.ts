@@ -3,6 +3,5 @@
  * Adaptive Card syntax.
  */
 export interface CardData {
-  title: string;
   body: string;
 }
