@@ -77,6 +77,9 @@
                 "env": "local"
             }
         },
+        // {
+        //     "label": "install and start redis server locally"
+        // },
         {
             "label": "Start application",
             "type": "shell",

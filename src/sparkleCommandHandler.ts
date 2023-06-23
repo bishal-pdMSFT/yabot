@@ -4,6 +4,7 @@ import { AdaptiveCards } from "@microsoft/adaptivecards-tools";
 import sparklesCard from "./adaptiveCards/sparklesCard.json";
 import { CardData } from "./cardModels";
 import * as OS from 'os';
+import { redisClient } from ".";
 
 /**
  * The `SparkleCommandHandler
@@ -23,7 +24,7 @@ export class SparkleCommandHandler
 
     let mentions = context.activity.entities.filter(e => !!e.mentioned);
     let uniqueMentions: Map<string, string> = new Map<string, string>();
-    //let mentionNames = []
+
     mentions.forEach(e => {
       if(e.mentioned.id.includes(process.env.BOT_ID ?? null)) return;
       if(!uniqueMentions.has(e.mentioned.id)) {
@@ -34,16 +35,14 @@ export class SparkleCommandHandler
     });
 
     let sparkleMessages = [];
-    uniqueMentions.forEach((name: string, id:string) => {
-      if(this.leaderboard.has(id)) {
-        let value = this.leaderboard.get(id);
-        this.leaderboard.set(id, ++value);
-        sparkleMessages = sparkleMessages.concat(`Aww yiss! **${name}** has **${value}** sparkles`)//.concat(OS.EOL);
+    for await (const [id, name] of uniqueMentions) {
+      let counter = await redisClient.incr(id);
+      if(counter != 1) {
+        sparkleMessages = sparkleMessages.concat(`Aww yiss! **${name}** has **${counter}** sparkles`)//.concat(OS.EOL);
       } else {
-        this.leaderboard.set(id, 1);
         sparkleMessages = sparkleMessages.concat(`Aww yiss! **${name}** has gotten **first** sparkle`)//.concat(OS.EOL);
       }
-    })
+    }
 
     // mentionNames.forEach(name => message.text.replace(name, ''));
     // message.text.replace(<string>this.triggerPatterns, '')

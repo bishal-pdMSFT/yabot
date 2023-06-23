@@ -1,6 +1,12 @@
 import * as restify from "restify";
+import { createClient } from 'redis';
 import { commandApp } from "./internal/initialize";
 import { TeamsBot } from "./teamsBot";
+
+
+export const redisClient = createClient();
+redisClient.on('error', err => console.log('Redis Client Error', err));
+redisClient.connect();
 
 // This template uses `restify` to serve HTTP responses.
 // Create a restify server.
